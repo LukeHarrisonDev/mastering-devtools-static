@@ -1,14 +1,16 @@
-const pokemonList = ["charmander", "squirtle", "bulbasaur", "pikachu", "gible"];
+const pokemonList = ["snorlax", "charmander", "squirtle", "bulbasaur", "pikachu", "gible"];
 const listElement = document.getElementById("pokemon-list");
 
 pokemonList.forEach((pokemonName) => {
   // Fetch species data to get the evolution chain URL
   fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokemonName}`)
+  .then((response) => response.json())
     .then((speciesData) => {
-      const evolutionChainUrl = speciesData.url;
+      const evolutionChainUrl = speciesData.evolution_chain.url;
 
       // Fetch the evolution chain data
       fetch(evolutionChainUrl)
+      .then((response) => response.json())
         .then((evolutionData) => {
           const evolutions = [];
           getEvolutions(evolutionData.chain, evolutions).then(() => {
@@ -35,6 +37,7 @@ pokemonList.forEach((pokemonName) => {
             // Append the main container and the evolution sequence to the list item
             listItem.appendChild(pokemonEvolutionDiv);
             listItem.appendChild(evolutionSequenceDiv);
+            listElement.appendChild(listItem);
 
             const evolutionSequence = document.getElementById(
               `${pokemonName}-evolutions`
